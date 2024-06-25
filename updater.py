@@ -1,7 +1,9 @@
 import wget
+import logging
 import time
 import os
 
+logging.basicConfig(level=logging.INFO, filename=__name__, filemode='w')
 
 def main():
     print("Начата установка новой версии ожидайте...")
@@ -21,6 +23,7 @@ def main():
 
     except Exception as Error:
         print('Не удалось установить новую версию программы пожалуйста обратитесь к разработчику за помощью либо обновите програму сами: ', Error)
+        logging.error("Ошибка установки", exc_info=True)
 
     time.sleep(5)
     os.startfile(PROGRAM_NAME)

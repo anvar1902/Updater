@@ -1,7 +1,9 @@
 import wget
 import requests
+import logging
 import os
 
+logging.basicConfig(level=logging.INFO, filename=__name__, filemode='w')
 
 class Updater:
     def __init__(self,
@@ -50,6 +52,7 @@ class Updater:
         except Exception as Error:
             print("Ошибка проверки: \n", Error)
             print("Обратитесь за помощью к разработчику")
+            logging.error("Ошибка проверки наличия обновления", exc_info=True)
 
     def update_program(self):
         os.system("cls")
@@ -79,3 +82,4 @@ class Updater:
         except Exception as Error:
             print("Ошибка установки новой версии: \n", Error)
             print("Пожалуйста обратитесь к разработчику за помощью либо обновите програму сами")
+            logging.error("Ошибка установки Апдейтера", exc_info=True)
