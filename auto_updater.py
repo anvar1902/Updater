@@ -87,21 +87,21 @@ class Updater:
             latest_updater_ver = latest_updater_url.replace("https://github.com/anvar1902/OrigonFish/releases/tag/", "")
             latest_updater_download_url = self.UPDATER_REPOSITORY.replace("tag", "download")
             print(f"Последняя версия Апдейтера: {latest_updater_ver}")
-            logging.debug(f"Последняя версия Апдейтера: {latest_updater_ver}")
+            autoupdater_logger.debug(f"Последняя версия Апдейтера: {latest_updater_ver}")
 
             print("Скачивание Апдейтера...")
-            logging.info("Скачивание Апдейтера")
+            autoupdater_logger.info("Скачивание Апдейтера")
             wget.download(latest_updater_download_url + f"/{self.UPDATER_NAME}")
-            logging.info("Апдейтер успешно скачан")
+            autoupdater_logger.info("Апдейтер успешно скачан")
             print(f"Апдейтер успешно скачан")
 
             print("Сохранение инструкций для Апдейтера...")
-            logging.info("Сохранение инструкций для Апдейтера")
+            autoupdater_logger.info("Сохранение инструкций для Апдейтера")
             if os.path.exists("updater_settings.txt"): os.remove("updater_settings.txt")
             with open("updater_settings.txt", 'w') as file:
                 lines = [self.LATEST_VERSION_str, self.URL, self.PROGRAM_NAME]
                 file.writelines("%s\n" % line for line in lines)
-            logging.info("Инструкции успешно сохранены")
+            autoupdater_logger.info("Инструкции успешно сохранены")
 
             print("Запускаю Апдейтер...")
             autoupdater_logger.info("Запускаю Апдейтер")
