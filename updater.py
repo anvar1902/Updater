@@ -19,7 +19,7 @@ def end_program():
     os.startfile(PROGRAM_NAME)
     logging.info("Запущена программа")
     logging.info("Удаление апдейтера")
-    #os.remove(argv[0])
+    os.remove(argv[0])
 
 def main():
     global PROGRAM_NAME
@@ -42,7 +42,7 @@ def main():
 
         os.remove(PROGRAM_NAME)
         logging.debug("Удалена старая версия")
-        #wget.download(URL + f"/releases/download/{LATEST_VERSION}/{PROGRAM_NAME}")
+        wget.download(URL + f"/releases/download/{LATEST_VERSION}/{PROGRAM_NAME}")
 
 
     except Exception as Error:
