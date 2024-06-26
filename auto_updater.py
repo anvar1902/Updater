@@ -2,6 +2,7 @@ import wget
 import requests
 import logging
 import os
+import time
 
 if not os.path.isdir("logs"): os.mkdir("logs")
 autoupdater_logger = logging.getLogger(__name__.split('.')[-1])
@@ -37,10 +38,12 @@ class Updater:
         except Exception as Error:
             print(f"Ошибка инициализации: \n{Error}")
             autoupdater_logger.error("Ошибка инициализации", exc_info=True)
+            time.sleep(5)
         else:
             print("Инициализация прошла успешно")
             autoupdater_logger.info("Инициализация прошла успешно")
         print(f"Текущая версия программы: {self.CURRECT_VERSION_str}")
+        time.sleep(1)
 
     def check_new_version(self):
         print("Проверка на наличие новой версии ожидайте...")
@@ -74,6 +77,7 @@ class Updater:
             print("Ошибка проверки: \n", Error)
             print("Обратитесь за помощью к разработчику")
             autoupdater_logger.error("Ошибка проверки наличия обновления", exc_info=True)
+            time.sleep(5)
 
     def update_program(self):
         os.system("cls")
@@ -83,7 +87,7 @@ class Updater:
 
         try:
             print("Получение последней версии Апдейтера...")
-            latest_updater_url = requests.get(self.UPDATER_REPOSITORY + "/releases/latest").url
+            latest_updater_url = requests.get(self.UPDATER_REPOSITORY + "/releases/latest/").url
             latest_updater_ver = latest_updater_url.replace("https://github.com/anvar1902/OrigonFish/releases/tag/", "")
             latest_updater_download_url = self.UPDATER_REPOSITORY.replace("tag", "download")
             print(f"Последняя версия Апдейтера: {latest_updater_ver}")
@@ -112,3 +116,4 @@ class Updater:
             print("Ошибка установки новой версии: \n", Error)
             print("Пожалуйста обратитесь к разработчику за помощью либо обновите программу сами")
             autoupdater_logger.error("Ошибка установки Апдейтера", exc_info=True)
+            time.sleep(5)
