@@ -3,13 +3,22 @@ import requests
 import logging
 import os
 
-logging.basicConfig(level=logging.INFO, filename=__name__, filemode='w')
+if not os.path.isdir("logs"): os.mkdir("logs")
+autoupdater_logger = logging.getLogger(__name__.split('.')[-1])
+autoupdater_logger.setLevel(logging.DEBUG)
+
+log_handler = logging.FileHandler("logs/" + __name__.split('.')[-1] + ".log", mode='w')
+log_formatter = logging.Formatter("%(name)s %(asctime)s %(levelname)s %(message)s")
+
+log_handler.setFormatter(log_formatter)
+autoupdater_logger.addHandler(log_handler)
+autoupdater_logger.debug("Логгер запущен")
 
 class Updater:
     def __init__(self,
                 current_version_str: str,
                 repository_url: str,
-                program_name: str = "main.exe",
+                program_name: str = "autoupdater.exe",
                 updater_name: str = "updater.exe",
                 updater_repository: str = "https://github.com/anvar1902/Updater"
                 ):
@@ -77,8 +86,10 @@ class Updater:
                 file.writelines("%s\n" % line for line in lines)
 
             print("Запускаю Апдейтер...")
+            autoupdater_logger.info("Запускаю Апдейтер")
             os.startfile(self.UPDATER_NAME)
-            os.close(1)
+            autoupdater_logger.info("Апдейтер успешно запущен")
+            exit()
         except Exception as Error:
             print("Ошибка установки новой версии: \n", Error)
             print("Пожалуйста обратитесь к разработчику за помощью либо обновите програму сами")
