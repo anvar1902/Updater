@@ -89,7 +89,7 @@ class Updater:
             print("Получение последней версии Апдейтера...")
             latest_updater_url = requests.get(self.UPDATER_REPOSITORY + "/releases/latest/").url
             latest_updater_ver = latest_updater_url.replace("https://github.com/anvar1902/OrigonFish/releases/tag/", "")
-            latest_updater_download_url = self.UPDATER_REPOSITORY.replace("tag", "download")
+            latest_updater_download_url = latest_updater_url.replace("tag", "download")
             print(f"Последняя версия Апдейтера: {latest_updater_ver}")
             autoupdater_logger.debug(f"Последняя версия Апдейтера: {latest_updater_ver}")
 
