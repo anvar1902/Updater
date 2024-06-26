@@ -18,24 +18,33 @@ class Updater:
     def __init__(self,
                 current_version_str: str,
                 repository_url: str,
-                program_name: str = "autoupdater.exe",
+                program_name: str,
                 updater_name: str = "updater.exe",
                 updater_repository: str = "https://github.com/anvar1902/Updater"
                 ):
-        self.CURRECT_VERSION_str = current_version_str
-        self.CURRECT_VERSION = list(map(int, current_version_str.split('.')))
-        self.LATEST_VERSION_str = None
-        self.LATEST_VERSION = None
-        self.VERSION_LEN = 3
-        self.URL = repository_url
-        self.PROGRAM_NAME = program_name
-        self.UPDATER_NAME = updater_name
-        self.UPDATER_REPOSITORY = updater_repository
-        if os.path.exists(self.UPDATER_NAME): os.remove(self.UPDATER_NAME)
+        autoupdater_logger.info("Запущена инициализация настроек")
+        try:
+            self.CURRECT_VERSION_str = current_version_str
+            self.CURRECT_VERSION = list(map(int, current_version_str.split('.')))
+            self.LATEST_VERSION_str = None
+            self.LATEST_VERSION = None
+            self.VERSION_LEN = 3
+            self.URL = repository_url
+            self.PROGRAM_NAME = program_name
+            self.UPDATER_NAME = updater_name
+            self.UPDATER_REPOSITORY = updater_repository
+            if os.path.exists(self.UPDATER_NAME): os.remove(self.UPDATER_NAME)
+        except Exception as Error:
+            print(f"Ошибка инициализации: \n{Error}")
+            autoupdater_logger.error("Ошибка инициализации", exc_info=True)
+        else:
+            print("Инициализация прошла успешно")
+            autoupdater_logger.info("Инициализация прошла успешно")
         print(f"Текущая версия программы: {self.CURRECT_VERSION_str}")
 
     def check_new_version(self):
         print("Проверка на наличие новой версии ожидайте...")
+        autoupdater_logger.info("Запуск проверки на наличие новой версии")
 
         try:
             latest_respone_url = requests.get(self.URL + "/releases/latest").url
@@ -45,11 +54,14 @@ class Updater:
             for i in range(self.VERSION_LEN):
                 if self.CURRECT_VERSION[i] + 1 <= self.LATEST_VERSION[i]:
                     print(f"Найдена новая версия: {self.LATEST_VERSION_str}")
+                    autoupdater_logger.info(f"Найдена новая версия: {self.LATEST_VERSION_str}")
                     yn = input("Хотите установить (Y/N)?: ").upper()
 
                     while yn != "Y" and yn != "N":
+                        autoupdater_logger.debug(f"Неверный ответ: {yn}")
                         yn = input("Хотите установить (Y/N)?: ").upper()
 
+                    autoupdater_logger.debug(f"Ответ: {yn}")
                     if yn == "Y":
                         self.update_program()
                     return
@@ -61,12 +73,13 @@ class Updater:
         except Exception as Error:
             print("Ошибка проверки: \n", Error)
             print("Обратитесь за помощью к разработчику")
-            logging.error("Ошибка проверки наличия обновления", exc_info=True)
+            autoupdater_logger.error("Ошибка проверки наличия обновления", exc_info=True)
 
     def update_program(self):
         os.system("cls")
         os.system("clear")
         print("Начата установка новой версии...")
+        autoupdater_logger.info("Запуск процесса обновление программы")
 
         try:
             print("Получение последней версии Апдейтера...")
@@ -74,16 +87,21 @@ class Updater:
             latest_updater_ver = latest_updater_url.replace("https://github.com/anvar1902/OrigonFish/releases/tag/", "")
             latest_updater_download_url = self.UPDATER_REPOSITORY.replace("tag", "download")
             print(f"Последняя версия Апдейтера: {latest_updater_ver}")
+            logging.debug(f"Последняя версия Апдейтера: {latest_updater_ver}")
 
             print("Скачивание Апдейтера...")
+            logging.info("Скачивание Апдейтера")
             wget.download(latest_updater_download_url + f"/{self.UPDATER_NAME}")
+            logging.info("Апдейтер успешно скачан")
             print(f"Апдейтер успешно скачан")
 
-            print("Передаю инструкции Апдейтеру...")
+            print("Сохранение инструкций для Апдейтера...")
+            logging.info("Сохранение инструкций для Апдейтера")
             if os.path.exists("updater_settings.txt"): os.remove("updater_settings.txt")
             with open("updater_settings.txt", 'w') as file:
                 lines = [self.LATEST_VERSION_str, self.URL, self.PROGRAM_NAME]
                 file.writelines("%s\n" % line for line in lines)
+            logging.info("Инструкции успешно сохранены")
 
             print("Запускаю Апдейтер...")
             autoupdater_logger.info("Запускаю Апдейтер")
@@ -92,5 +110,5 @@ class Updater:
             exit()
         except Exception as Error:
             print("Ошибка установки новой версии: \n", Error)
-            print("Пожалуйста обратитесь к разработчику за помощью либо обновите програму сами")
-            logging.error("Ошибка установки Апдейтера", exc_info=True)
+            print("Пожалуйста обратитесь к разработчику за помощью либо обновите программу сами")
+            autoupdater_logger.error("Ошибка установки Апдейтера", exc_info=True)
