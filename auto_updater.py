@@ -109,9 +109,9 @@ class Updater:
 
             print("Запускаю Апдейтер...")
             autoupdater_logger.info("Запускаю Апдейтер")
-            os.startfile(self.UPDATER_NAME)
+            os.startfile(self.UPDATER_NAME, 'runas')
             autoupdater_logger.info("Апдейтер успешно запущен")
-            exit()
+            os.close(1)
         except Exception as Error:
             print("Ошибка установки новой версии: \n", Error)
             print("Пожалуйста обратитесь к разработчику за помощью либо обновите программу сами")
