@@ -2,6 +2,7 @@ import wget
 import logging
 import time
 import os
+import io
 from sys import argv
 
 updater_logger = logging.getLogger("updater")
@@ -17,7 +18,7 @@ def end_program():
     time.sleep(5)
     updater_logger.info("Завершение обновление")
     os.startfile(PROGRAM_NAME)
-    updater_logger.info("Запущена программа")
+    updater_logger.info("Запущена обновлённая программа")
     updater_logger.info("Удаление апдейтера")
     os.remove(argv[0])
 
@@ -27,7 +28,7 @@ def main():
     updater_logger.info("Начата установка новой версии ожидайте")
 
     try:
-        with open("updater_settings.txt", 'r') as file:
+        with io.open("updater_settings.txt", 'r') as file:
             data = file.readlines()
         updater_logger.debug(f"Открыт файл updater_settings.txt и получена дата: {data}")
 

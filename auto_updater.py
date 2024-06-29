@@ -2,6 +2,7 @@ import wget
 import requests
 import logging
 import os
+import io
 import time
 
 if not os.path.isdir("logs"): os.mkdir("logs")
@@ -14,6 +15,7 @@ log_formatter = logging.Formatter("%(name)s %(asctime)s %(levelname)s %(message)
 log_handler.setFormatter(log_formatter)
 autoupdater_logger.addHandler(log_handler)
 autoupdater_logger.debug("Логгер запущен")
+
 
 class Updater:
     def __init__(self,
@@ -35,10 +37,12 @@ class Updater:
             self.UPDATER_NAME = updater_name
             self.UPDATER_REPOSITORY = updater_repository
             if os.path.exists(self.UPDATER_NAME): os.remove(self.UPDATER_NAME)
+
         except Exception as Error:
             print(f"Ошибка инициализации: \n{Error}")
             autoupdater_logger.error("Ошибка инициализации", exc_info=True)
             time.sleep(5)
+
         else:
             print("Инициализация прошла успешно")
             autoupdater_logger.info("Инициализация прошла успешно")
@@ -54,6 +58,7 @@ class Updater:
             self.LATEST_VERSION_str = latest_respone_url.replace(self.URL + "/releases/tag/", '')
             self.LATEST_VERSION = list(map(int, self.LATEST_VERSION_str.split('.')))
             yn = ""
+
             for i in range(self.VERSION_LEN):
                 if self.CURRECT_VERSION[i] + 1 <= self.LATEST_VERSION[i]:
                     print(f"Найдена новая версия: {self.LATEST_VERSION_str}")
@@ -68,8 +73,11 @@ class Updater:
                     if yn == "Y":
                         self.update_program()
                     return
+
             if yn == "":
                 print("Последняя версия уже установлена")
+                autoupdater_logger.info("Последняя версия уже установлена")
+                time.sleep(1)
                 os.system("clear")
                 os.system("cls")
 
@@ -102,7 +110,7 @@ class Updater:
             print("Сохранение инструкций для Апдейтера...")
             autoupdater_logger.info("Сохранение инструкций для Апдейтера")
             if os.path.exists("updater_settings.txt"): os.remove("updater_settings.txt")
-            with open("updater_settings.txt", 'w') as file:
+            with io.open("updater_settings.txt", 'w') as file:
                 lines = [self.LATEST_VERSION_str, self.URL, self.PROGRAM_NAME]
                 file.writelines("%s\n" % line for line in lines)
             autoupdater_logger.info("Инструкции успешно сохранены")
@@ -112,6 +120,7 @@ class Updater:
             os.startfile(self.UPDATER_NAME, 'runas')
             autoupdater_logger.info("Апдейтер успешно запущен")
             os.close(1)
+
         except Exception as Error:
             print("Ошибка установки новой версии: \n", Error)
             print("Пожалуйста обратитесь к разработчику за помощью либо обновите программу сами")
