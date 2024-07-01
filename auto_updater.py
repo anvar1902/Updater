@@ -60,6 +60,7 @@ class Updater:
             yn = ""
 
             for i in range(self.VERSION_LEN):
+                #print(self.CURRECT_VERSION[i] + 1 <= self.LATEST_VERSION[i], "\n", self.CURRECT_VERSION[i], self.LATEST_VERSION[i])
                 if self.CURRECT_VERSION[i] + 1 <= self.LATEST_VERSION[i]:
                     print(f"Найдена новая версия: {self.LATEST_VERSION_str}")
                     autoupdater_logger.info(f"Найдена новая версия: {self.LATEST_VERSION_str}")
@@ -73,6 +74,8 @@ class Updater:
                     if yn == "Y":
                         self.update_program()
                     return
+                elif self.CURRECT_VERSION[i] + 1 != self.LATEST_VERSION[i]:
+                    break
 
             if yn == "":
                 print("Последняя версия уже установлена")
